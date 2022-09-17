@@ -39,22 +39,26 @@ Sample erlang bank program, which supports the following operations
 {error, in_sufficien_funds}
 ```
 
+The bank is started using a supervisor `bank_sup` which takes care of starting and stoping the bank including 
+restarting it when it crashes.
+
 **Note**
 * Each module needs to be compiled before calling any functions in it.
 
 ```shell
 ~ erl
-1> c(bank).
-{ok, bank}
+1> c(bank), c(bank_sup).
+{ok, bank_sup}
 ```
 
 * Before calling any bank operations on the bank module, we need to start the bank module.
 
 ```shell
-1> bank:start().
-............Starting bank.............
+1> bank_sup:start().
+............Starting Supervisor.............
+...............Starting bank................
 ```
 
 **Example**
 
-![](doc/assets/Sample%20Input%20Output%201st%20Version.png)
+![](doc/assets/Sample%20Input%20Output%20With%20Supervisor.png)

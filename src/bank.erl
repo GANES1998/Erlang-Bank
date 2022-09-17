@@ -10,17 +10,18 @@
 -author("ganesonravichandran").
 
 %% API
--export([start/0, stop/0, deposit/2, balance/1, withdraw/2, init/0]).
+-export([start_link/0, stop/0, deposit/2, balance/1, withdraw/2, init/0]).
 -record(state, {
   accounts
 }).
 
 
 %%APIs and will be exposed
-start() ->
-  io:format(".............Starting Bank............."),
-  BankProcessPid = spawn(?MODULE, init, []),
-  register(?MODULE, BankProcessPid).
+start_link() ->
+  io:format(".............Starting Bank.............~n"),
+  BankProcessPid = spawn_link(?MODULE, init, []),
+  register(?MODULE, BankProcessPid),
+  {ok, BankProcessPid}.
 
 stop() ->
   ?MODULE ! terminate.
@@ -62,7 +63,7 @@ get_current_balance(AccountId, Accounts) ->
 main_loop(#state{accounts = Accounts} = State) ->
   receive
     terminate ->
-      io:format("..........Closing Bank..........");
+      io:format("..........Closing Bank..........~n");
     {deposit, CallerPid, AccountId, Amount} ->
       CurrentBalance = get_current_balance(AccountId, Accounts),
       NewBalance = CurrentBalance + Amount,
